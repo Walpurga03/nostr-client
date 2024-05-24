@@ -36,7 +36,7 @@ export default function CreateNote({ pool, hashtags }: Props) {
         id: getEventHash({ ..._baseEvent, pubkey }), // Berechne die ID des Events
       };
 
-      const pubs: Promise<void>[] = pool.publish(RELAYS, event); // Veröffentliche das Event an die Relays
+      const pubs = pool.publish(RELAYS, event) as Promise<void>[];  // Veröffentliche das Event an die Relays
 
       // Warte auf alle Promises
       await Promise.all(pubs);
