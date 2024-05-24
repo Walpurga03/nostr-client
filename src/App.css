@@ -1,6 +1,6 @@
 #root {
-  width: 100%;
-  max-width: 70ch;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%; /* Das Wurzelelement nimmt die volle Breite des übergeordneten Containers ein */
+  max-width: 70ch; /* Die maximale Breite des Wurzelelements beträgt 70 Zeichen */
+  margin: 0 auto; /* Zentriert das Wurzelelement horizontal im übergeordneten Container */
+  padding: 2rem; /* Fügt dem Wurzelelement Innenabstand von 2 Rem hinzu (Rem: Relative Einheit basierend auf der Schriftgröße des Wurzelelements) */
 }

@@ -1,105 +1,116 @@
-import { SimplePool, Event } from "nostr-tools";
-import { useState, useEffect } from "react";
-import "./App.css";
-import NotesList from "./Components/NotesList";
+import { SimplePool, Event } from "nostr-tools"; // Importiere benötigte Module aus nostr-tools
+import { useEffect, useRef, useState } from "react"; // Importiere React Hooks
+import { useDebounce } from "use-debounce"; // Importiere use-debounce Hook
+import "./App.css"; // Importiere CSS Datei
+import CreateNote from "./Components/CreateNote"; // Importiere CreateNote Komponente
+import HashtagsFilter from "./Components/HashtagsFilter"; // Importiere HashtagsFilter Komponente
+import NotesList from "./Components/NotesList"; // Importiere NotesList Komponente
+import { insertEventIntoDescendingList } from "./utils/helperFunctions"; // Importiere Hilfsfunktion
 
 export const RELAYS = [
   "wss://nostr-pub.wellorder.net",
   "wss://nostr.drss.io",
   "wss://nostr.swiss-enigma.ch",
   "wss://relay.damus.io",
-];
+]; // Liste der Relays
 
 export interface Metadata {
   name?: string;
   about?: string;
   picture?: string;
   nip05?: string;
-}
-
+} // Schnittstelle für Metadaten
 
 function App() {
+  const [pool, setPool] = useState<SimplePool | null>(null); // Zustand für den SimplePool
+  const [eventsImmediate, setEventsImmediate] = useState<Event[]>([]); // Zustand für sofortige Events
+  const [events] = useDebounce(eventsImmediate, 1500); // Zustand für debouncete Events
+  const [metadata, setMetadata] = useState<Record<string, Metadata>>({}); // Zustand für Metadaten
+  const metadataFetched = useRef<Record<string, boolean>>({}); // Ref für bereits abgefragte Metadaten
+  const [hashtags, setHashtags] = useState<string[]>([]); // Zustand für Hashtags
 
-  const [pool, setPool] = useState<SimplePool | null>(null)
-  const [events, setEvents] = useState<Event[]>([])
-  const [metadata, setMetadata] = useState<Record<string, Metadata>>({})
-
-  // relais-pool einrichten   
+  // Initialisiere den Relay-Pool
   useEffect(() => {
     const _pool = new SimplePool();
     setPool(_pool);
 
     return () => {
-      _pool.close(RELAYS)
-    }
+      _pool.close(RELAYS); // Schließe den Pool beim Unmount
+    };
   }, []);
 
-  // events abfragen/abonnieren
+  // Abonniere Events basierend auf Hashtags
   useEffect(() => {
-    if (!pool) return; // Überprüfe, ob der Pool existiert
+    if (!pool) return;
 
-    // Erstelle eine Subscription zu den Relais und abonniere Events
+    setEventsImmediate([]); // Leere Events
     const sub = pool.sub(RELAYS, [
       {
-        kinds: [1], // Filtere Ereignisse nach Kinds
-        limit: 100, // Begrenze die Anzahl der Ereignisse
-        "#t": ["nostr"]
-      }
+        kinds: [1], // Art der Events
+        limit: 100, // Begrenzung auf 100 Events
+        "#t": hashtags, // Filtere nach Hashtags
+      },
     ]);
 
-    // Füge einen Event-Handler hinzu, um auf eingehende Events zu reagieren
-    sub.on('event', (event: Event) => {
-      setEvents((events) => [...events, event]); // Füge das empfangene Ereignis zum Zustand 'events' hinzu
+    // Event-Handler für neue Events
+    sub.on("event", (event: Event) => {
+      setEventsImmediate((events) => insertEventIntoDescendingList(events, event)); // Füge Event in Liste ein
     });
 
-    // Rückgabewert ist eine Aufräumfunktion, die beim Unmount der Komponente ausgeführt wird
     return () => {
-      sub.unsub(); // Beispiel: Subscription beenden
+      sub.unsub(); // Beende das Abonnement beim Unmount
     };
-  }, [pool]); // Der Effekt wird ausgeführt, wenn sich der `pool` ändert
+  }, [hashtags, pool]);
 
-
-  // render der events
+  // Lade Metadaten für die Events
   useEffect(() => {
-    if (!pool) return; // Überprüfe, ob der Pool existiert
+    if (!pool) return;
 
-    const pubkeysToFetch = events.map((event) => event.pubkey);
+    const pubkeysToFetch = events
+      .filter((event: { pubkey: string }) => !metadataFetched.current[event.pubkey]) // Filtere bereits abgefragte pubkeys
+      .map((event: { pubkey: string }) => event.pubkey); // Extrahiere pubkeys
 
-    // Erstelle eine Subscription zu den Relais und abonniere Events
+    pubkeysToFetch.forEach((pubkey: string) => {
+      metadataFetched.current[pubkey] = true; // Markiere pubkeys als abgefragt
+    });
+
     const sub = pool.sub(RELAYS, [
       {
-        kinds: [0], // Filtere Ereignisse nach Kinds
-        authors: pubkeysToFetch
-      }
+        kinds: [0], // Art der Events
+        authors: pubkeysToFetch, // Autorenfilter
+      },
     ]);
 
-    // Füge einen Event-Handler hinzu, um auf eingehende Events zu reagieren
-    sub.on('event', (event: Event) => {
+    // Event-Handler für Metadaten-Events
+    sub.on("event", (event: Event) => {
       const metadata = JSON.parse(event.content) as Metadata;
 
       setMetadata((cur) => ({
         ...cur,
-        [event.pubkey]: metadata,
+        [event.pubkey]: metadata, // Speichere Metadaten im Zustand
       }));
     });
 
-    sub.on('eose', () => {
-      sub.unsub();
-    })
+    sub.on("eose", () => {
+      sub.unsub(); // Beende das Abonnement nach Empfang aller Events
+    });
 
-    // Rückgabewert ist eine Aufräumfunktion, die beim Unmount der Komponente ausgeführt wird
-    return () => { };
-  }, [events, pool])
+    return () => {};
+  }, [events, pool]);
 
+  // Render nichts, wenn kein Pool vorhanden ist
+  if (!pool) return null;
 
   return (
     <div className="app">
       <div className="flex flex-col gap-16">
         <h1 className="text-h1">Nostr Feed</h1>
-        <NotesList metadata={metadata} notes={events} />
+        <CreateNote pool={pool} hashtags={hashtags} /> {/* Komponente zum Erstellen von Notizen */}
+        <HashtagsFilter hashtags={hashtags} onChange={setHashtags} /> {/* Komponente zum Filtern von Hashtags */}
+        <NotesList metadata={metadata} notes={events} /> {/* Komponente zum Anzeigen der Notizen */}
       </div>
     </div>
   );
 }
 
-export default App;
+export default App; // Exportiere die App-Komponente

@@ -1,36 +1,39 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@tailwind base; /* Verwendet die Basisstile von Tailwind CSS */
+@tailwind components; /* Verwendet die Komponentenstile von Tailwind CSS */
+@tailwind utilities; /* Verwendet die Hilfsklassen von Tailwind CSS */
+
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; /* Setzt die Schriftart für das gesamte Dokument */
+  line-height: 1.5; /* Legt die Zeilenhöhe auf das 1,5-fache der Schriftgröße fest */
+  font-weight: 400; /* Legt die Standardschriftstärke auf 400 (normal) fest */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light dark; /* Unterstützt das Farbschema für helle und dunkle Modus */
+  color: rgba(255, 255, 255, 0.87); /* Setzt die Standardtextfarbe auf ein helles Weiß mit 87% Deckkraft */
+  background-color: #242424; /* Setzt die Hintergrundfarbe des Dokuments auf ein dunkles Grau */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+  font-synthesis: none; /* Deaktiviert die Schriftsynthese */
+  text-rendering: optimizeLegibility; /* Optimiert die Textdarstellung für bessere Lesbarkeit */
+  -webkit-font-smoothing: antialiased; /* Aktiviert die Kantenglättung für verbesserte Schriftarten auf Webkit-basierten Browsern */
+  -moz-osx-font-smoothing: grayscale; /* Aktiviert die Kantenglättung für verbesserte Schriftarten auf Firefox (OS X) */
+  -webkit-text-size-adjust: 100%; /* Stellt sicher, dass die Schriftgröße auf mobilen Geräten nicht skaliert wird */
 }
+
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  font-weight: 500; /* Legt die Standardschriftstärke für Links auf 500 (halb fett) fest */
+  color: #646cff; /* Setzt die Farbe für nicht besuchte Links auf ein helles Blau */
+  text-decoration: inherit; /* Vererbt die Textdekoration von übergeordneten Elementen */
 }
 a:hover {
-  color: #535bf2;
+  color: #535bf2; /* Ändert die Farbe des Links beim Schweben über ihn auf ein dunkleres Blau */
 }
 
+
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  margin: 0; /* Entfernt den Standardaußenabstand des Körpers */
+  display: flex; /* Stellt den Körperinhalt im Flex-Layout dar */
+  place-items: center; /* Zentriert die Elemente horizontal und vertikal im Körper */
+  min-width: 320px; /* Legt die minimale Breite des Körpers auf 320 Pixel fest */
+  min-height: 100vh; /* Legt die minimale Höhe des Körpers auf die volle Bildschirmhöhe (100 vh) fest */
 }
