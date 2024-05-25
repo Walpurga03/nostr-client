@@ -1,0 +1,17 @@
+# Auto-Erkennung von Textdateien und Normalisierung der Zeilenendungen
+* text=auto
+
+# Kennzeichnung aller Dateien, die binär sind und nicht modifiziert werden sollten
+*.png binary
+*.jpg binary
+*.gif binary
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.zip binary
+*.exe binary
+
+# Sicherstellen, dass package-lock.json LF-Zeilenendungen verwendet
+package-lock.json text eol=lf

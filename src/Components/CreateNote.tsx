@@ -36,14 +36,16 @@ export default function CreateNote({ pool, hashtags }: Props) {
         id: getEventHash({ ..._baseEvent, pubkey }), // Berechne die ID des Events
       };
 
-      const pubs = pool.publish(RELAYS, event) as Promise<void>[];  // Veröffentliche das Event an die Relays
+      const pubs = pool.publish(RELAYS, event); // Veröffentliche das Event an die Relays
 
-      // Warte auf alle Promises
-      await Promise.all(pubs);
+      if (Array.isArray(pubs)) {
+        // Warte auf alle Promises
+        await Promise.all(pubs as Promise<void>[]);
+      }
 
       // Leere das Eingabefeld, wenn alle Veröffentlichungen erfolgreich sind
       setInput("");
-      
+
     } catch (error) {
       alert("User rejected operation or an error occurred"); // Zeige eine Warnung bei Fehlern
     }
