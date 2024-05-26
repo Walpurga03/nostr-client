@@ -30,7 +30,7 @@ export default function HashtagsFilter({ hashtags, onChange }: Props) {
       <form onSubmit={onSubmit} className="flex gap-16">
         <input
           type="text"
-          className="grow p-16 rounded"
+          className="grow p-16 rounded bg-gray-800"
           placeholder="Write a hashtag"
           value={input}
           onChange={(e) => setInput(e.target.value)} // Aktualisiere den Input-Wert

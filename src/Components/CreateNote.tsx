@@ -57,7 +57,7 @@ export default function CreateNote({ pool, hashtags }: Props) {
       <form onSubmit={onSubmit}>
         <textarea
           placeholder="Write your note here..." // Platzhaltertext für das Textarea
-          className="w-full p-12 rounded" // CSS-Klassen für das Styling
+          className="bg-gray-800 w-full p-12 rounded" // CSS-Klassen für das Styling
           value={input} // Wert des Textareas
           onChange={(e) => setInput(e.target.value)} // Ändere den Zustand bei Eingaben
           rows={6} // Anzahl der Zeilen des Textareas
