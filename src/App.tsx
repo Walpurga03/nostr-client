@@ -95,16 +95,19 @@ function App() {
       sub.unsub(); // Beende das Abonnement nach Empfang aller Events
     });
 
-    return () => {};
+    return () => { };
   }, [events, pool]);
 
   // Render nichts, wenn kein Pool vorhanden ist
   if (!pool) return null;
 
   return (
-    <div className="app">
-      <div className="flex flex-col gap-16">
-        <h1 className="text-h1">Nostr Feed</h1>
+    <div className="app bg-gradient-to-b from-nostr-primary to-nostr-secondary p-8 text-white justify-center rounded-lg">
+      <div className="flex flex-col gap-16 p-16">
+        <div className="flex items-center justify-center">
+          <img src="/images/nostrich-150.webp" alt="Logo" className="w-48 h-48 mr-2 mb-2" />
+          <h1 className="text-6xl font-bold mb-8">Nostr Feed</h1>
+        </div>
         <CreateNote pool={pool} hashtags={hashtags} /> {/* Komponente zum Erstellen von Notizen */}
         <HashtagsFilter hashtags={hashtags} onChange={setHashtags} /> {/* Komponente zum Filtern von Hashtags */}
         <NotesList metadata={metadata} notes={events} /> {/* Komponente zum Anzeigen der Notizen */}

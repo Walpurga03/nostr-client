@@ -10,6 +10,19 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'nostr-primary': '#251A2C',
+        'nostr-secondary': '#18181B',
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.5s ease-in-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+      },
       boxShadow: {
         xs: "0px 1px 2px rgba(16, 24, 40, 0.05)",
         sm: "0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06)",
@@ -86,5 +99,6 @@ module.exports = {
       },
     },
   },
+  variants: {},
   plugins: [],
 };
