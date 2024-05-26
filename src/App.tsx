@@ -105,7 +105,7 @@ function App() {
     <div className="app bg-gradient-to-b from-nostr-primary to-nostr-secondary p-8 text-white justify-center rounded-lg">
       <div className="flex flex-col gap-16 p-16">
         <div className="flex items-center justify-center">
-          <img src="/images/nostrich-150.webp" alt="Logo" className="w-48 h-48 mr-2 mb-2" />
+          <img src="./images/nostrich-150.webp" alt="Logo" className="w-48 h-48 mr-2 mb-2" />
           <h1 className="text-6xl font-bold mb-8">Nostr Feed</h1>
         </div>
         <CreateNote pool={pool} hashtags={hashtags} /> {/* Komponente zum Erstellen von Notizen */}
